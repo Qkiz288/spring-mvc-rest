@@ -52,6 +52,8 @@ public class CustomerServiceImplTest {
         // given
         Customer customer = new Customer();
         customer.setId(1L);
+        customer.setFirstname("John");
+        customer.setLastname("Johnson");
         Optional<Customer> customerOptional = Optional.of(customer);
 
         when(customerRepository.findById(anyLong())).thenReturn(customerOptional);
@@ -61,6 +63,9 @@ public class CustomerServiceImplTest {
 
         // then
         assertNotNull(customerDTO);
+        assertEquals(customer.getFirstname(), customerDTO.getFirstname());
+        assertEquals(customer.getLastname(), customerDTO.getLastname());
+        assertEquals("/api/v1/customer/1", customerDTO.getCustomerUrl());
         verify(customerRepository, times(1)).findById(anyLong());
     }
 
@@ -83,6 +88,27 @@ public class CustomerServiceImplTest {
         // then
         assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
         assertEquals("/api/v1/customer/1", savedDTO.getCustomerUrl());
+    }
+
+    @Test
+    public void testUpdateCustomer() {
+        // given
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstname("John");
+
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setId(1L);
+        updatedCustomer.setFirstname(customerDTO.getFirstname());
+        updatedCustomer.setLastname(customerDTO.getLastname());
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(updatedCustomer);
+
+        // when
+        CustomerDTO updatedDTO = customerService.updateCustomer(1L, customerDTO);
+
+        // then
+        assertEquals(customerDTO.getFirstname(), updatedDTO.getFirstname());
+        assertEquals("/api/v1/customer/1", updatedDTO.getCustomerUrl());
     }
 
 }
