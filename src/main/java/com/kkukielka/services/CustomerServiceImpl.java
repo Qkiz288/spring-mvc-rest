@@ -7,7 +7,6 @@ import com.kkukielka.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,5 +40,19 @@ public class CustomerServiceImpl implements CustomerService {
                 .findById(id)
                 .map(customerMapper::customerToCustomerDTO)
                 .orElseThrow(() -> new RuntimeException(String.format("Customer with ID %s not found!", id)));
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+
+        Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        CustomerDTO savedCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+
+        savedCustomerDTO.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+
+        return savedCustomerDTO;
     }
 }

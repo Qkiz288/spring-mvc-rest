@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class CustomerServiceTest {
+public class CustomerServiceImplTest {
 
     private CustomerService customerService;
 
@@ -63,4 +63,26 @@ public class CustomerServiceTest {
         assertNotNull(customerDTO);
         verify(customerRepository, times(1)).findById(anyLong());
     }
+
+    @Test
+    public void createNewCustomer() {
+        // given
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstname("John");
+
+        Customer savedCustomer = new Customer();
+        savedCustomer.setId(1L);
+        savedCustomer.setFirstname(customerDTO.getFirstname());
+        savedCustomer.setLastname(customerDTO.getLastname());
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
+
+        // when
+        CustomerDTO savedDTO = customerService.createNewCustomer(customerDTO);
+
+        // then
+        assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
+        assertEquals("/api/v1/customer/1", savedDTO.getCustomerUrl());
+    }
+
 }
