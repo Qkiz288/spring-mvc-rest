@@ -2,6 +2,7 @@ package com.kkukielka.services;
 
 import com.kkukielka.api.v1.mapper.CustomerMapper;
 import com.kkukielka.api.v1.model.CustomerDTO;
+import com.kkukielka.controllers.v1.CustomerController;
 import com.kkukielka.domain.Customer;
 import com.kkukielka.repositories.CustomerRepository;
 import org.junit.Before;
@@ -65,7 +66,7 @@ public class CustomerServiceImplTest {
         assertNotNull(customerDTO);
         assertEquals(customer.getFirstname(), customerDTO.getFirstname());
         assertEquals(customer.getLastname(), customerDTO.getLastname());
-        assertEquals("/api/v1/customer/1", customerDTO.getCustomerUrl());
+        assertEquals(CustomerController.BASE_URL + "/1", customerDTO.getCustomerUrl());
         verify(customerRepository, times(1)).findById(anyLong());
     }
 
@@ -87,7 +88,7 @@ public class CustomerServiceImplTest {
 
         // then
         assertEquals(customerDTO.getFirstname(), savedDTO.getFirstname());
-        assertEquals("/api/v1/customer/1", savedDTO.getCustomerUrl());
+        assertEquals(CustomerController.BASE_URL + "/1", savedDTO.getCustomerUrl());
     }
 
     @Test
@@ -108,7 +109,7 @@ public class CustomerServiceImplTest {
 
         // then
         assertEquals(customerDTO.getFirstname(), updatedDTO.getFirstname());
-        assertEquals("/api/v1/customer/1", updatedDTO.getCustomerUrl());
+        assertEquals(CustomerController.BASE_URL + "/1", updatedDTO.getCustomerUrl());
     }
 
     @Test
