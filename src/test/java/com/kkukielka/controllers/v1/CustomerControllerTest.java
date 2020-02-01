@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +60,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
 
         List<CustomerDTO> customers = Arrays.asList(customerDTO1, customerDTO2);
 
-        Mockito.when(customerService.getAllCustomers()).thenReturn(customers);
+        when(customerService.getAllCustomers()).thenReturn(customers);
 
         // when - then
         mockMvc.perform(get("/api/v1/customers/")
@@ -77,7 +78,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
         customerDTO1.setLastname(JOHNSON);
         customerDTO1.setCustomerUrl("api/v1/customers/1");
 
-        Mockito.when(customerService.getCustomerById(anyLong())).thenReturn(customerDTO1);
+        when(customerService.getCustomerById(anyLong())).thenReturn(customerDTO1);
 
         // when - then
         mockMvc.perform(get("/api/v1/customers/1")
@@ -100,7 +101,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
         savedDTO.setLastname(customerDTO.getLastname());
         savedDTO.setCustomerUrl("/api/v1/customer/1");
 
-        Mockito.when(customerService.createNewCustomer(customerDTO)).thenReturn(savedDTO);
+        when(customerService.createNewCustomer(customerDTO)).thenReturn(savedDTO);
 
         // when - then
         mockMvc.perform(post("/api/v1/customers/")
@@ -124,7 +125,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
         updatedDTO.setLastname(customerDTO.getLastname());
         updatedDTO.setCustomerUrl("/api/v1/customer/1");
 
-        Mockito.when(customerService.updateCustomer(anyLong(), any(CustomerDTO.class))).thenReturn(updatedDTO);
+        when(customerService.updateCustomer(anyLong(), any(CustomerDTO.class))).thenReturn(updatedDTO);
 
         // when - then
         mockMvc.perform(put("/api/v1/customers/1")
@@ -134,6 +135,29 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.firstname", equalTo("Mikey")))
                 .andExpect(jsonPath("$.lastname", equalTo("Mouse")))
                 .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customer/1")));
+    }
+
+    @Test
+    public void testPatchCustomer() throws Exception {
+        // given
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstname("Fred");
+
+        CustomerDTO patchDTO = new CustomerDTO();
+        patchDTO.setFirstname(customerDTO.getFirstname());
+        patchDTO.setLastname("Mercury");
+        patchDTO.setCustomerUrl("/api/v1/customers/1");
+
+        when(customerService.patchCustomer(anyLong(), any(CustomerDTO.class))).thenReturn(patchDTO);
+
+        // when - then
+        mockMvc.perform(patch("/api/v1/customers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstname", equalTo(customerDTO.getFirstname())))
+                .andExpect(jsonPath("$.lastname", equalTo(patchDTO.getLastname())))
+                .andExpect(jsonPath("$.customer_url", equalTo(patchDTO.getCustomerUrl())));
     }
 
 }
