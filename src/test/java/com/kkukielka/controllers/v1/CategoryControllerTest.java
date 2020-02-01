@@ -1,7 +1,9 @@
 package com.kkukielka.controllers.v1;
 
 import com.kkukielka.api.v1.model.CategoryDTO;
+import com.kkukielka.controllers.RestResponseEntityExceptionHandler;
 import com.kkukielka.services.CategoryService;
+import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -38,7 +40,8 @@ public class CategoryControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler()).build();
 
     }
 
@@ -74,6 +77,16 @@ public class CategoryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
+    }
+
+    @Test
+    public void testCategoryNotFound() throws Exception {
+        String notFoundName = "ABC";
+
+        when(categoryService.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get(CategoryController.BASE_URL + "/" + notFoundName))
+                .andExpect(status().isNotFound());
     }
 
 }

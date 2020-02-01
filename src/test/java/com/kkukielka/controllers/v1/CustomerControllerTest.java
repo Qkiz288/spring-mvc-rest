@@ -1,7 +1,9 @@
 package com.kkukielka.controllers.v1;
 
 import com.kkukielka.api.v1.model.CustomerDTO;
+import com.kkukielka.controllers.RestResponseEntityExceptionHandler;
 import com.kkukielka.services.CustomerService;
+import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -41,7 +43,8 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler()).build();
     }
 
     @Test
@@ -86,6 +89,16 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.firstname", equalTo(MIKE)))
                 .andExpect(jsonPath("$.lastname", equalTo(JOHNSON)))
                 .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL + "/1")));
+    }
+
+    @Test
+    public void testCustomerNotFound() throws Exception {
+        // given
+        when(customerService.getCustomerById(anyLong())).thenThrow(ResourceNotFoundException.class);
+
+        // when - then
+        mockMvc.perform(get(CustomerController.BASE_URL + "/1"))
+                    .andExpect(status().isNotFound());
     }
 
     @Test

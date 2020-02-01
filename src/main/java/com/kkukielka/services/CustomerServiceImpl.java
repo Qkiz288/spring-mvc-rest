@@ -5,6 +5,7 @@ import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.controllers.v1.CustomerController;
 import com.kkukielka.domain.Customer;
 import com.kkukielka.repositories.CustomerRepository;
+import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
                     return customerDTO;
                 })
-                .orElseThrow(() -> new RuntimeException(String.format("Customer with ID %s not found!", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Customer with ID %s not found!", id)));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
             patchedCustomer.setCustomerUrl(getCustomerUrl(id));
 
             return patchedCustomer;
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
