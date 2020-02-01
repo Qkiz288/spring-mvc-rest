@@ -111,4 +111,18 @@ public class CustomerServiceImplTest {
         assertEquals("/api/v1/customer/1", updatedDTO.getCustomerUrl());
     }
 
+    @Test
+    public void testDeleteCustomer() {
+        // given
+        Long id = 1L;
+
+        doNothing().when(customerRepository).deleteById(anyLong());
+
+        // when
+        customerService.deleteCustomerById(id);
+
+        // then
+        verify(customerRepository, times(1)).deleteById(anyLong());
+    }
+
 }

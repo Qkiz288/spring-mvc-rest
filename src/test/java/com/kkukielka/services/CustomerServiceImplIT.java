@@ -95,6 +95,18 @@ public class CustomerServiceImplIT {
         assertThat(originalLastName, not(equalTo(updatedCustomer.getLastname())));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void deleteCustomer() {
+        // given
+        long id = getCustomerIdValue();
+
+        // when
+        customerService.deleteCustomerById(id);
+
+        // then
+        customerService.getCustomerById(id);
+    }
+
     private Long getCustomerIdValue(){
         List<Customer> customers = customerRepository.findAll();
 
