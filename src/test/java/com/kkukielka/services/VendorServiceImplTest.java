@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class VendorServiceImplTest {
 
@@ -49,5 +50,26 @@ public class VendorServiceImplTest {
         assertEquals(vendors.size(), returnVendorsDTO.size());
         assertEquals(VendorController.BASE_URL + "/1", returnVendorsDTO.get(0).getVendorUrl());
         Mockito.verify(vendorRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void createNewVendor() {
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName("Test");
+
+        Vendor returnVendor = new Vendor();
+        returnVendor.setId(1L);
+        returnVendor.setName("Test");
+
+        Mockito.when(vendorRepository.save(any(Vendor.class))).thenReturn(returnVendor);
+
+        // when
+        VendorDTO savedVendorDTO = vendorService.createNewVendor(vendorDTO);
+
+        // then
+        assertEquals(returnVendor.getName(), savedVendorDTO.getName());
+        assertEquals(VendorController.BASE_URL + "/1", savedVendorDTO.getVendorUrl());
+        Mockito.verify(vendorRepository, Mockito.times(1)).save(any(Vendor.class));
     }
 }

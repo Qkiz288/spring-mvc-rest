@@ -3,6 +3,7 @@ package com.kkukielka.services;
 import com.kkukielka.api.v1.mapper.VendorMapper;
 import com.kkukielka.api.v1.model.VendorDTO;
 import com.kkukielka.controllers.v1.VendorController;
+import com.kkukielka.domain.Vendor;
 import com.kkukielka.repositories.VendorRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,18 @@ public class VendorServiceImpl implements VendorService {
                     return vendorDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public VendorDTO createNewVendor(VendorDTO vendorDTO) {
+        Vendor vendor = vendorMapper.vendorDTOToVendor(vendorDTO);
+
+        Vendor savedVendor = vendorRepository.save(vendor);
+
+        VendorDTO savedVendorDTO = vendorMapper.vendorToVendorDTO(savedVendor);
+
+        savedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/" + savedVendor.getId());
+
+        return savedVendorDTO;
     }
 }

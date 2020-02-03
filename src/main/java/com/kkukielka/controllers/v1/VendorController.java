@@ -1,12 +1,10 @@
 package com.kkukielka.controllers.v1;
 
+import com.kkukielka.api.v1.model.VendorDTO;
 import com.kkukielka.api.v1.model.VendorListDTO;
 import com.kkukielka.services.VendorService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(VendorController.BASE_URL)
@@ -24,6 +22,12 @@ public class VendorController {
     @ResponseStatus(HttpStatus.OK)
     public VendorListDTO getAllVendors() {
         return new VendorListDTO(vendorService.getAllVendors());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VendorDTO createNewVendor(@RequestBody VendorDTO vendorDTO) {
+        return vendorService.createNewVendor(vendorDTO);
     }
 
 }

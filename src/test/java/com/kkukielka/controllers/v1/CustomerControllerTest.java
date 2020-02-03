@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CustomerControllerTest extends AbstractRestControllerTest {
+public class  CustomerControllerTest extends AbstractRestControllerTest {
 
     public static final String MIKE = "Mike";
     public static final String JOHNSON = "Johnson";

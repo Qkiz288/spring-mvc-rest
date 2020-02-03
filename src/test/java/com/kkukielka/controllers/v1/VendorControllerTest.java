@@ -15,12 +15,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class VendorControllerTest {
+public class VendorControllerTest extends AbstractRestControllerTest {
 
     @InjectMocks
     private VendorController vendorController;
@@ -57,5 +58,26 @@ public class VendorControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.vendors", hasSize(2)));
+    }
+
+    @Test
+    public void createNewVendor() throws Exception {
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName("Test");
+
+        VendorDTO savedVendorDTO = new VendorDTO();
+        savedVendorDTO.setName("Test");
+        savedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/1");
+
+        Mockito.when(vendorService.createNewVendor(vendorDTO)).thenReturn(savedVendorDTO);
+
+        // when - then
+        mockMvc.perform(post(VendorController.BASE_URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(vendorDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", equalTo("Test")))
+                .andExpect(jsonPath("$.vendor_url", equalTo(VendorController.BASE_URL + "/1")));
     }
 }
