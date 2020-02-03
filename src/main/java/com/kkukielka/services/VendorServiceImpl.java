@@ -46,4 +46,9 @@ public class VendorServiceImpl implements VendorService {
 
         return savedVendorDTO;
     }
+
+    @Override
+    public void deleteVendorById(Long id) {
+        vendorRepository.deleteById(id);
+    }
 }

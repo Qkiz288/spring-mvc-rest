@@ -16,6 +16,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 public class VendorServiceImplTest {
 
@@ -72,4 +74,19 @@ public class VendorServiceImplTest {
         assertEquals(VendorController.BASE_URL + "/1", savedVendorDTO.getVendorUrl());
         Mockito.verify(vendorRepository, Mockito.times(1)).save(any(Vendor.class));
     }
+
+    @Test
+    public void deleteCustomerById() {
+        // given
+        Long idToDelete = 1L;
+
+        doNothing().when(vendorRepository).deleteById(anyLong());
+
+        // when
+        vendorService.deleteVendorById(idToDelete);
+
+        // then
+        verify(vendorRepository, times(1)).deleteById(anyLong());
+    }
+
 }
