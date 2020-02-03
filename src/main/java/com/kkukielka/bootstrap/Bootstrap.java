@@ -2,8 +2,10 @@ package com.kkukielka.bootstrap;
 
 import com.kkukielka.domain.Category;
 import com.kkukielka.domain.Customer;
+import com.kkukielka.domain.Vendor;
 import com.kkukielka.repositories.CategoryRepository;
 import com.kkukielka.repositories.CustomerRepository;
+import com.kkukielka.repositories.VendorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -14,17 +16,21 @@ public class Bootstrap implements CommandLineRunner {
 
     private CategoryRepository categoryRepository;
     private CustomerRepository customerRepository;
+    private VendorRepository vendorRepository;
 
     public Bootstrap(CategoryRepository categoryRepository,
-                     CustomerRepository customerRepository) {
+                     CustomerRepository customerRepository,
+                     VendorRepository vendorRepository) {
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
+        this.vendorRepository = vendorRepository;
     }
 
     @Override
     public void run(String... args) {
         initializeCategories();
         initializeCustomers();
+        initializeVendors();
     }
 
     private void initializeCategories() {
@@ -70,6 +76,23 @@ public class Bootstrap implements CommandLineRunner {
         customerRepository.save(customer3);
 
         log.info("Saved Customers count: " + customerRepository.findAll().size());
+    }
+
+    private void initializeVendors() {
+        Vendor vendor1 = new Vendor();
+        vendor1.setName("Extra Shop");
+
+        Vendor vendor2 = new Vendor();
+        vendor2.setName("Perfect Buy");
+
+        Vendor vendor3 = new Vendor();
+        vendor3.setName("All You Need");
+
+        vendorRepository.save(vendor1);
+        vendorRepository.save(vendor2);
+        vendorRepository.save(vendor3);
+
+        log.info("Saved Vendors count: " + vendorRepository.findAll().size());
     }
 
 }
