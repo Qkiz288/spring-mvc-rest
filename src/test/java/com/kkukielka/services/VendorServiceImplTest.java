@@ -2,6 +2,7 @@ package com.kkukielka.services;
 
 import com.kkukielka.api.v1.mapper.VendorMapper;
 import com.kkukielka.api.v1.model.VendorDTO;
+import com.kkukielka.controllers.v1.VendorController;
 import com.kkukielka.domain.Vendor;
 import com.kkukielka.repositories.VendorRepository;
 import org.junit.Before;
@@ -34,7 +35,10 @@ public class VendorServiceImplTest {
     @Test
     public void getAllVendors() {
         // given
-        List<Vendor> vendors = Arrays.asList(new Vendor(), new Vendor(), new Vendor());
+        List<Vendor> vendors = Arrays.asList(
+                new Vendor(1L, "Test1"),
+                new Vendor(2L, "Test2"),
+                new Vendor(3L, "Test3"));
 
         Mockito.when(vendorRepository.findAll()).thenReturn(vendors);
 
@@ -43,6 +47,7 @@ public class VendorServiceImplTest {
 
         // then
         assertEquals(vendors.size(), returnVendorsDTO.size());
+        assertEquals(VendorController.BASE_URL + "/1", returnVendorsDTO.get(0).getVendorUrl());
         Mockito.verify(vendorRepository, Mockito.times(1)).findAll();
     }
 }

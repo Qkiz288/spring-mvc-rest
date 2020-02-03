@@ -10,4 +10,8 @@ import java.util.List;
 public class VendorListDTO {
     private MetaDTO metaDTO;
     private List<VendorDTO> vendors;
+
+    public VendorListDTO(List<VendorDTO> vendorDTOs) {
+        this.vendors = vendorDTOs;
+    }
 }
