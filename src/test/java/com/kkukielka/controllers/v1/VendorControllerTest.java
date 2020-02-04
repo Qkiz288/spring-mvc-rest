@@ -113,6 +113,28 @@ public class VendorControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
+    public void updateVendor() throws Exception {
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName("Updated");
+
+        VendorDTO returnDTO = new VendorDTO();
+        returnDTO.setName(vendorDTO.getName());
+        returnDTO.setVendorUrl(VendorController.BASE_URL + "/1");
+
+        when(vendorService.updateVendor(1L, vendorDTO)).thenReturn(returnDTO);
+
+        // when - then
+        mockMvc.perform(put(VendorController.BASE_URL + "/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(vendorDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo(returnDTO.getName())))
+                .andExpect(jsonPath("$.vendor_url", equalTo(returnDTO.getVendorUrl())));
+
+    }
+
+    @Test
     public void patchVendor() throws Exception {
         // given
         VendorDTO vendorDTO = new VendorDTO();

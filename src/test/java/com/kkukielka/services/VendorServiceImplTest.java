@@ -97,6 +97,30 @@ public class VendorServiceImplTest {
     }
 
     @Test
+    public void updateVendor() {
+        // given
+        String newName = "New name";
+
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName(newName);
+
+        Vendor updatedVendor = new Vendor();
+        updatedVendor.setId(1L);
+        updatedVendor.setName(newName);
+
+        when(vendorRepository.save(any(Vendor.class))).thenReturn(updatedVendor);
+
+        // when
+        VendorDTO returnDTO = vendorService.updateVendor(1L, vendorDTO);
+
+        // then
+        assertEquals(updatedVendor.getName(), returnDTO.getName());
+        assertEquals(VendorController.BASE_URL + "/1", returnDTO.getVendorUrl());
+        verify(vendorRepository,times(1)).save(any(Vendor.class));
+
+    }
+
+    @Test
     public void deleteCustomerById() {
         // given
         Long idToDelete = 1L;

@@ -62,6 +62,13 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
+    public VendorDTO updateVendor(Long id, VendorDTO vendorDTO) {
+        Vendor vendor = vendorMapper.vendorDTOToVendor(vendorDTO);
+        vendor.setId(id);
+        return saveAndReturnVendorDTO(vendor);
+    }
+
+    @Override
     public VendorDTO patchVendor(Long id, VendorDTO vendorDTO) {
         return vendorRepository.findById(id)
                 .map(vendor -> {
@@ -83,5 +90,15 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public void deleteVendorById(Long id) {
         vendorRepository.deleteById(id);
+    }
+
+    private VendorDTO saveAndReturnVendorDTO(Vendor vendor) {
+        Vendor savedVendor = vendorRepository.save(vendor);
+
+        VendorDTO savedVendorDTO = vendorMapper.vendorToVendorDTO(savedVendor);
+
+        savedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/" + savedVendor.getId());
+
+        return savedVendorDTO;
     }
 }
