@@ -45,7 +45,7 @@ public class VendorServiceImpl implements VendorService {
                     return vendorDTO;
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(
-                        "Vendor with ID - %s not found", id)));
+                        "Vendor with ID = %s not found", id)));
     }
 
     @Override
@@ -59,6 +59,25 @@ public class VendorServiceImpl implements VendorService {
         savedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/" + savedVendor.getId());
 
         return savedVendorDTO;
+    }
+
+    @Override
+    public VendorDTO patchVendor(Long id, VendorDTO vendorDTO) {
+        return vendorRepository.findById(id)
+                .map(vendor -> {
+                    if (vendorDTO.getName() != null) {
+                        vendor.setName(vendorDTO.getName());
+                    }
+
+                    Vendor patchedVendor = vendorRepository.save(vendor);
+
+                    VendorDTO patchedVendorDTO = vendorMapper.vendorToVendorDTO(patchedVendor);
+                    patchedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/" + vendor.getId());
+
+                    return patchedVendorDTO;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                        "Vendor with ID = %s not found", id)));
     }
 
     @Override

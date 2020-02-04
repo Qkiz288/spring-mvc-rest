@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +18,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -110,6 +110,28 @@ public class VendorControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", equalTo("Test")))
                 .andExpect(jsonPath("$.vendor_url", equalTo(VendorController.BASE_URL + "/1")));
+    }
+
+    @Test
+    public void patchVendor() throws Exception {
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName("Patch");
+
+        VendorDTO patchVendor = new VendorDTO();
+        patchVendor.setName(vendorDTO.getName());
+        patchVendor.setVendorUrl(VendorController.BASE_URL + "/1");
+
+        when(vendorService.patchVendor(anyLong(), any(VendorDTO.class))).thenReturn(patchVendor);
+
+        // when - then
+        mockMvc.perform(patch(VendorController.BASE_URL + "/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(vendorDTO)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.name", equalTo(patchVendor.getName())))
+                        .andExpect(jsonPath("$.vendor_url", equalTo(VendorController.BASE_URL + "/1")));
+
     }
 
     @Test
