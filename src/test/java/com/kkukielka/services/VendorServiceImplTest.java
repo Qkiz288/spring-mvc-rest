@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,6 +53,26 @@ public class VendorServiceImplTest {
         assertEquals(vendors.size(), returnVendorsDTO.size());
         assertEquals(VendorController.BASE_URL + "/1", returnVendorsDTO.get(0).getVendorUrl());
         Mockito.verify(vendorRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void getVendorById() {
+        // given
+        Vendor vendor = new Vendor();
+        vendor.setId(1L);
+        vendor.setName("Test");
+
+        Optional<Vendor> vendorOptional = Optional.of(vendor);
+
+        when(vendorRepository.findById(anyLong())).thenReturn(vendorOptional);
+
+        // when
+        VendorDTO returnVendorDTO = vendorService.getVendorById(1L);
+
+        // then
+        assertEquals(vendor.getName(), returnVendorDTO.getName());
+        assertEquals(VendorController.BASE_URL + "/1", returnVendorDTO.getVendorUrl());
+        verify(vendorRepository, times(1)).findById(anyLong());
     }
 
     @Test

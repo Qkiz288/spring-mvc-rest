@@ -1,7 +1,9 @@
 package com.kkukielka.controllers.v1;
 
 import com.kkukielka.api.v1.model.VendorDTO;
+import com.kkukielka.controllers.RestResponseEntityExceptionHandler;
 import com.kkukielka.services.VendorService;
+import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +38,8 @@ public class VendorControllerTest extends AbstractRestControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(vendorController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(vendorController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler()).build();
     }
 
     @Test
@@ -51,13 +55,40 @@ public class VendorControllerTest extends AbstractRestControllerTest {
 
         List<VendorDTO> returnDTOs = Arrays.asList(vendorDTO1, vendorDTO2);
 
-        Mockito.when(vendorService.getAllVendors()).thenReturn(returnDTOs);
+        when(vendorService.getAllVendors()).thenReturn(returnDTOs);
 
         // when - then
         mockMvc.perform(get(VendorController.BASE_URL)
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.vendors", hasSize(2)));
+    }
+
+    @Test
+    public void getVendorById() throws Exception {
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName("Test");
+        vendorDTO.setVendorUrl(VendorController.BASE_URL + "/1");
+
+        when(vendorService.getVendorById(anyLong())).thenReturn(vendorDTO);
+
+        // when - then
+        mockMvc.perform(get(VendorController.BASE_URL + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo("Test")))
+                .andExpect(jsonPath("$.vendor_url", equalTo(VendorController.BASE_URL + "/1")));
+
+    }
+
+    @Test
+    public void vendorNotFound() throws Exception {
+        // given
+        when(vendorService.getVendorById(anyLong())).thenThrow(ResourceNotFoundException.class);
+
+        // when - then
+        mockMvc.perform(get(VendorController.BASE_URL + "/1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -70,7 +101,7 @@ public class VendorControllerTest extends AbstractRestControllerTest {
         savedVendorDTO.setName("Test");
         savedVendorDTO.setVendorUrl(VendorController.BASE_URL + "/1");
 
-        Mockito.when(vendorService.createNewVendor(vendorDTO)).thenReturn(savedVendorDTO);
+        when(vendorService.createNewVendor(vendorDTO)).thenReturn(savedVendorDTO);
 
         // when - then
         mockMvc.perform(post(VendorController.BASE_URL)
@@ -86,7 +117,7 @@ public class VendorControllerTest extends AbstractRestControllerTest {
         mockMvc.perform(delete(VendorController.BASE_URL + "/1"))
                 .andExpect(status().isOk());
 
-        Mockito.verify(vendorService, Mockito.times(1)).deleteVendorById(anyLong());
+        verify(vendorService, times(1)).deleteVendorById(anyLong());
     }
 
 }

@@ -5,6 +5,7 @@ import com.kkukielka.api.v1.model.VendorDTO;
 import com.kkukielka.controllers.v1.VendorController;
 import com.kkukielka.domain.Vendor;
 import com.kkukielka.repositories.VendorRepository;
+import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,19 @@ public class VendorServiceImpl implements VendorService {
                     return vendorDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public VendorDTO getVendorById(Long id) {
+        return vendorRepository
+                .findById(id)
+                .map(vendor -> {
+                    VendorDTO vendorDTO = vendorMapper.vendorToVendorDTO(vendor);
+                    vendorDTO.setVendorUrl(VendorController.BASE_URL + "/" + vendor.getId());
+                    return vendorDTO;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                        "Vendor with ID - %s not found", id)));
     }
 
     @Override
