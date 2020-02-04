@@ -6,6 +6,7 @@ import com.kkukielka.bootstrap.Bootstrap;
 import com.kkukielka.domain.Customer;
 import com.kkukielka.repositories.CategoryRepository;
 import com.kkukielka.repositories.CustomerRepository;
+import com.kkukielka.repositories.VendorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,9 @@ public class CustomerServiceImplIT {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private VendorRepository vendorRepository;
+
     private CustomerService customerService;
 
     @Before
@@ -40,7 +44,7 @@ public class CustomerServiceImplIT {
         log.debug("Loading customer data");
         log.debug("Count: " + customerRepository.findAll().size());
 
-        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
         bootstrap.run();
 
         customerService = new CustomerServiceImpl(customerRepository, CustomerMapper.INSTANCE);
