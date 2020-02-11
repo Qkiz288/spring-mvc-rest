@@ -12,5 +12,38 @@
     <artifactId>rest-model</artifactId>
     <name>spring-mvc-model</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- The package of your generated sources -->
+                    <packageName>com.kkukielka.model</packageName>
+                    <sources>
+                        src/main/resources/xsd
+                    </sources>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
 
 </project>
