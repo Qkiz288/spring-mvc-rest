@@ -1,9 +1,9 @@
 package com.kkukielka.services;
 
 import com.kkukielka.api.v1.mapper.CustomerMapper;
-import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.bootstrap.Bootstrap;
 import com.kkukielka.domain.Customer;
+import com.kkukielka.model.CustomerDTO;
 import com.kkukielka.repositories.CategoryRepository;
 import com.kkukielka.repositories.CustomerRepository;
 import com.kkukielka.repositories.VendorRepository;

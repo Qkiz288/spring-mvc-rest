@@ -1,7 +1,7 @@
 package com.kkukielka.controllers.v1;
 
-import com.kkukielka.api.v1.model.CustomerDTO;
-import com.kkukielka.api.v1.model.CustomerListDTO;
+import com.kkukielka.model.CustomerDTO;
+import com.kkukielka.model.CustomerListDTO;
 import com.kkukielka.services.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,9 @@ public class CustomerController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CustomerListDTO getAllCustomers() {
-        return new CustomerListDTO(customerService.getAllCustomers());
+        CustomerListDTO customerListDTO = new CustomerListDTO();
+        customerListDTO.getCustomers().addAll(customerService.getAllCustomers());
+        return customerListDTO;
     }
 
     @GetMapping("/{id}")

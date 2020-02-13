@@ -1,15 +1,13 @@
 package com.kkukielka.services;
 
 import com.kkukielka.api.v1.mapper.CustomerMapper;
-import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.controllers.v1.CustomerController;
 import com.kkukielka.domain.Customer;
+import com.kkukielka.model.CustomerDTO;
 import com.kkukielka.repositories.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;

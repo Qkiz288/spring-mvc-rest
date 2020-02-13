@@ -1,7 +1,7 @@
 package com.kkukielka.api.v1.mapper;
 
-import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.domain.Customer;
+import com.kkukielka.model.CustomerDTO;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

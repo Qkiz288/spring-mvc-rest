@@ -1,7 +1,7 @@
 package com.kkukielka.controllers.v1;
 
-import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.controllers.RestResponseEntityExceptionHandler;
+import com.kkukielka.model.CustomerDTO;
 import com.kkukielka.services.CustomerService;
 import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.junit.Before;
@@ -90,7 +90,7 @@ public class  CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(MIKE)))
                 .andExpect(jsonPath("$.lastname", equalTo(JOHNSON)))
-                .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL + "/1")));
+                .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL + "/1")));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class  CustomerControllerTest extends AbstractRestControllerTest {
         savedDTO.setLastname(customerDTO.getLastname());
         savedDTO.setCustomerUrl(CustomerController.BASE_URL + "/1");
 
-        when(customerService.createNewCustomer(customerDTO)).thenReturn(savedDTO);
+        when(customerService.createNewCustomer(any())).thenReturn(savedDTO);
 
         // when - then
         mockMvc.perform(post(CustomerController.BASE_URL)
@@ -125,7 +125,7 @@ public class  CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstname", equalTo("Mikey")))
                 .andExpect(jsonPath("$.lastname", equalTo("Mouse")))
-                .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL + "/1")));
+                .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL + "/1")));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class  CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo("Mikey")))
                 .andExpect(jsonPath("$.lastname", equalTo("Mouse")))
-                .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL + "/1")));
+                .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL + "/1")));
     }
 
     @Test
@@ -174,7 +174,7 @@ public class  CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo(customerDTO.getFirstname())))
                 .andExpect(jsonPath("$.lastname", equalTo(patchDTO.getLastname())))
-                .andExpect(jsonPath("$.customer_url", equalTo(patchDTO.getCustomerUrl())));
+                .andExpect(jsonPath("$.customerUrl", equalTo(patchDTO.getCustomerUrl())));
     }
 
     @Test

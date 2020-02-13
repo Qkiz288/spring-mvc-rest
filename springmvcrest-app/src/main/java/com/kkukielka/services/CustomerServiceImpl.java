@@ -1,9 +1,9 @@
 package com.kkukielka.services;
 
 import com.kkukielka.api.v1.mapper.CustomerMapper;
-import com.kkukielka.api.v1.model.CustomerDTO;
 import com.kkukielka.controllers.v1.CustomerController;
 import com.kkukielka.domain.Customer;
+import com.kkukielka.model.CustomerDTO;
 import com.kkukielka.repositories.CustomerRepository;
 import com.kkukielka.services.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;

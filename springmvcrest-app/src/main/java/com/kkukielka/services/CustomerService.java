@@ -1,6 +1,6 @@
 package com.kkukielka.services;
 
-import com.kkukielka.api.v1.model.CustomerDTO;
+import com.kkukielka.model.CustomerDTO;
 
 import java.util.List;
 
